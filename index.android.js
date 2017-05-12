@@ -5,17 +5,16 @@
  */
 
 import React, {Component} from 'react';
-import {Button} from 'react-native'
+import Main from './src/Main';
 import {AppRegistry, StyleSheet, Text, View} from 'react-native';
 
 export default class FindYourBeach extends Component {
     render() {
         return (
-
             <View style={styles.container}>
-                <Button title="Learn More" color="#841584" accessibilityLabel="Learn more about this purple button"/>
+                <Main />
                 <Text style={styles.welcome}>
-                    Welcome to React Native!
+                    Yes me here
                 </Text>
                 <Text style={styles.instructions}>
                     To get started, edit index.android.js
