@@ -2,17 +2,18 @@ import React from 'react';
 import {AppRegistry, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native'
 
+
 class Main extends React.Component{
     componentWillMount() {
         console.log('pls')
         navigator.geolocation.getCurrentPosition((position) => {
+            // console.log(query)
             console.log('position', position);
             let region = {
                 latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                latitudeDelta: 0.00922*1.5,
-                longitudeDelta: 0.00421*1.5
+                longitude: position.coords.longitude
             }
+            console.log(`(${region.latitude-2}, ${region.longitude-2}, ${region.latitude+2}, ${region.longitude+2})`)
 
             // this.onRegionChange(region, position.coords.accuracy);
         });
