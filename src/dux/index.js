@@ -1,12 +1,14 @@
 import { combineReducers } from 'redux'
 
 import user from './User';
+import beaches from './Beaches';
+import querying from './Querying';
 
-function testReducer(state={}, action) {
-    return state;
-}
+import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 export default combineReducers({
     user,
-    test: testReducer
+    beaches,
+    querying,
+    routing: routerReducer
 });

@@ -13,10 +13,8 @@ let store=createStore(
     applyMiddleware(thunk)
 );
 
-console.log('store')
-console.log(store.getState())
-
 import Main from './pages/Main';
+import Searching from './pages/Searching';
 
 class App extends React.Component{
     render() {
@@ -25,6 +23,7 @@ class App extends React.Component{
                 <NativeRouter>
                     <View style={styles.container}>
                         <Route exact path='/' component={Main} />
+                        <Route exact path='/searching' component={Searching} />
                     </View>
                 </NativeRouter>
             </Provider>
