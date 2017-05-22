@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Button} from 'react-native'
+import {Button, Image} from 'react-native'
 import moment from 'moment';
 import { Link } from 'react-router-native'
 
@@ -39,11 +39,14 @@ class Main extends React.Component{
 
     render() {
         return (
-            <View>
-                <Link to="/searching" style={styles.welcome} underlayColor="#841584">
-                    <Text>Find me a beach</Text>
+            <Image source={require('../../data/background.png')} style={styles.background}>
+                <Link to="/searching" style={styles.sunButton} >
+                    <Image source={require('../../data/sunButton.png')} style={styles.sunButton} />
                 </Link>
-            </View>
+
+
+            </Image>
+
         )
     }
 }
@@ -54,5 +57,14 @@ export default Main;
 const styles = StyleSheet.create({
     welcome: {
         margin: 10
+    },
+    background: {
+        flex: 1,
+        alignSelf: 'stretch',
+        width: null,
+    },
+    sunButton: {
+        width:null,
+        flex: 1
     }
 });

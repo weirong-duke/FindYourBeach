@@ -4,9 +4,9 @@ import * as Progress from 'react-native-progress';
 
 const getProgress = (status) => {
         const progressLevels = {
-            'Finding beaches near you...': 0.33,
-            'Grabbing weather data for beaches...': 0.67,
-            'Calculating optimal beach...': 1
+            'Finding beaches near you...': 0.10,
+            'Grabbing weather data for beaches...': 0.70,
+            'Calculating optimal beach...': 0.95
         }
         console.log('checking status', status, progressLevels[status])
         return progressLevels[status] || 0;
@@ -18,7 +18,7 @@ const renderProgress = (status) => {
             <Text style={styles.welcome}>
                 {status}
             </Text>
-            <Progress.Bar animated={true} progress={getProgress(status)} width={200} />
+            <Progress.Bar animated={false} progress={getProgress(status)} width={200} />
 
         </View>
 
@@ -50,6 +50,9 @@ const renderResults = (beach) => {
     }
 
 export default class Searching extends React.Component{
+    shouldComponentUpdate(nextProps) {
+        return this.props.querying.status !== nextProps.querying.status
+    }
 
     render() {
         console.log('hello', this.props);
