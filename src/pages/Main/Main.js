@@ -1,41 +1,35 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Button, Image} from 'react-native'
+import {Button, Image} from 'react-native';
+import { Link } from 'react-router-native';
 import moment from 'moment';
-import { Link } from 'react-router-native'
-
 
 class Main extends React.Component{
     componentDidMount() {
         this.props.beginBeachQuery();
-        this.props.getUserCoordinates()
-            .then(response => {
-                if (response.success) {
-                    return this.props.fetchBeaches(this.props.user.url);
-                }
-            })
-            .then(queryResponse => {
-                console.log('success! GOT THE SHIT', queryResponse)
-                const weatherPromises = [];
-
-                queryResponse.forEach(beach => {
-                    weatherPromises.push(this.props.fetchWeatherForBeach(beach))
-                })
-                Promise.all(weatherPromises)
-                    .then(() => {
-                        this.props.updateBeachQuery('Calculating optimal beach...');
-
-                        console.log('finished')
-                        this.props.finishBeachQuery();
-                    })
-            })
-
-    }
-
-    beginQuery() {
+        // this.props.getUserCoordinates()
+        //     .then(response => {
+        //         if (response.success) {
+        //             return this.props.fetchBeaches(this.props.user.url);
+        //         }
+        //     })
+        //     .then(queryResponse => {
+        //         console.log('success! GOT THE SHIT', queryResponse)
+        //         const weatherPromises = [];
+        //
+        //         queryResponse.forEach(beach => {
+        //             weatherPromises.push(this.props.fetchWeatherForBeach(beach))
+        //         })
+        //         Promise.all(weatherPromises)
+        //             .then(() => {
+        //                 this.props.updateBeachQuery('Calculating optimal beach...');
+        //
+        //                 console.log('finished')
+        //                 this.props.finishBeachQuery();
+        //             })
+        //     })
 
     }
-    // <Button title="Find me a beach" color="#841584" onPress={() => this.beginQuery()}/>
 
     render() {
         return (
