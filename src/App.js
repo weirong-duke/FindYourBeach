@@ -27,13 +27,12 @@ class App extends React.Component{
                     </View>
                 </NativeRouter>
             </Provider>
-
         )
     }
-
 }
 
 export default App;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

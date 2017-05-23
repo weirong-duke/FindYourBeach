@@ -8,7 +8,6 @@ const getProgress = (status) => {
             'Grabbing weather data for beaches...': 0.70,
             'Calculating optimal beach...': 0.95
         }
-        console.log('checking status', status, progressLevels[status])
         return progressLevels[status] || 0;
     }
 
@@ -55,7 +54,6 @@ export default class Searching extends React.Component{
     }
 
     render() {
-        console.log('hello', this.props);
         return (
             <View>
                 {(this.props.querying.status === 'Done') ? renderResults(this.props.beaches.highScore.beach) : renderProgress(this.props.querying.status)}

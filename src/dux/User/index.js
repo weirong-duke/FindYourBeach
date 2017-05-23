@@ -25,24 +25,6 @@ export const USER_COORDINATES_SUCCESS = 'USER/USER_COORDINATES_SUCCESS';
 export const USER_COORDINATES_FAILURE = 'USER/USER_COORDINATES_FAILURE';
 export const SET_FETCH_BEACH_URL = 'USER/SET_FETCH_BEACH_URL';
 
-const generateUrl = region => {
-    const position = {
-        south: region.latitude-2.5,
-        west: region.longitude-2.5,
-        north: region.latitude+2.5,
-        east: region.longitude+2.5
-    }
-    const url = 'http://overpass-api.de/api/interpreter?data=' +
-    '[out:json];(' +
-    'node["name"~".* Beach$"]["place"="village"]' +
-    `(${position.south},${position.west},${position.north},${position.east});` +
-    'node["name"~".* Beach$"]["natural"="beach"]' +
-    `(${position.south},${position.west},${position.north},${position.east});` +
-    ');' +
-    'out 3;'
-    return encodeURI(url);
-}
-
 export function setFetchBeachUrl(url) {
     return {
         type: SET_FETCH_BEACH_URL,
@@ -74,7 +56,7 @@ export function getUserCoordinates() {
                         longitude: position.coords.longitude
                     }
                     dispatch(userCoordinatesSuccess(coordinates))
-                    dispatch(setFetchBeachUrl(generateUrl(coordinates)));
+                    dispatch(setFetchBeachUrl(_generateUrl(coordinates)));
                     resolve({success: true})
                 },
                 (error) => {
@@ -83,4 +65,23 @@ export function getUserCoordinates() {
                 });
         })
     }
+}
+
+
+const _generateUrl = region => {
+    const position = {
+        south: region.latitude-2.5,
+        west: region.longitude-2.5,
+        north: region.latitude+2.5,
+        east: region.longitude+2.5
+    }
+    const url = 'http://overpass-api.de/api/interpreter?data=' +
+    '[out:json];(' +
+    'node["name"~".* Beach$"]["place"="village"]' +
+    `(${position.south},${position.west},${position.north},${position.east});` +
+    'node["name"~".* Beach$"]["natural"="beach"]' +
+    `(${position.south},${position.west},${position.north},${position.east});` +
+    ');' +
+    'out 3;'
+    return encodeURI(url);
 }

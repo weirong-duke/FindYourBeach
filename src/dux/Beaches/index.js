@@ -1,14 +1,14 @@
 import {updateBeachQuery} from '../Querying';
+import {_calculateWeatherScore, _determineWeatherApiCall, _generateBeachUrl} from './util';
 
 const initialState = {
     byId: {},
     highScore: false
-}
+};
 
 export default function beaches(state = initialState, action) {
     switch (action.type) {
         case FETCH_BEACHES_FOR_USER_SUCCESS:
-            console.log('well heres the action', action);
             return {
                 ...state,
                 beaches: action.beaches
@@ -53,13 +53,11 @@ export const FETCH_WEATHER_FOR_BEACH_SUCCESS = 'BEACHES/FETCH_WEATHER_FOR_BEACH_
 export const FETCH_WEATHER_FOR_BEACH_FAILURE = 'BEACHES/FETCH_WEATHER_FOR_BEACH_FAILURE';
 
 export const SAVE_BEACH_BY_ID = 'BEACHES/SAVE_BEACH_BY_ID';
-
 export const SAVE_BEACH_SCORE_BY_ID = 'BEACHES/SAVE_BEACH_SCORE_BY_ID';
 
 export const SET_NEW_HIGH_SCORE = 'BEACHES/SET_NEW_HIGH_SCORE';
 
 export function fetchBeachesForUserSuccess(beaches) {
-    console.log('great success', beaches);
     return {type: FETCH_BEACHES_FOR_USER_SUCCESS, beaches}
 }
 
@@ -92,67 +90,14 @@ export function setNewHighScore(id, beach) {
     }
 }
 
-
-function __generateMockBeaches() {
-    return [
-        {
-            id: 157557887,
-            lat: -33.4901665,
-            lon: 151.43163,
-            tags: {
-                'census:population': "870;2006",
-                ele: "0",
-                name: "South Topsail Beach",
-                place: "village",
-                population: "870"
-            }
-        },
-        {
-            id: 157557888,
-            lat: 15.4901665,
-            lon: 67.43163,
-            tags: {
-                'census:population': "870;2006",
-                ele: "0",
-                name: "East Topsail Beach",
-                place: "village",
-                population: "870"
-            }
-        },
-        {
-            id: 157557886,
-            lat: 23.4901665,
-            lon: 25.43163,
-            tags: {
-                'census:population': "870;2006",
-                ele: "0",
-                name: "North Topsail Beach",
-                place: "village",
-                population: "870"
-            }
-        }
-    ]
-}
-
-
 function _mapBeachToCoordinates(beach) {
     return {id: beach.id, latitude: beach.lat, longitude: beach.lon, name: beach.tags.name}
 }
 
 export function fetchBeaches(url) {
     return (dispatch, getState) => {
-        dispatch(updateBeachQuery('Finding beaches near you...'))
-        // const mockBeaches = __generateMockBeaches().map(_mapBeachToCoordinates);
-        // console.log('mocks', mockBeaches);
-        // mockBeaches.forEach(beach => {
-        //     console.log('dispatch save beach ', beach)
-        //     dispatch(saveBeachById(beach));
-        // });
+        dispatch(updateBeachQuery('Finding beaches near you...'));
 
-        // dispatch(fetchBeachesForUserSuccess(mockBeaches));
-
-
-        // return Promise.resolve(__generateMockBeaches());
         return fetch(url, {
             method: 'GET'
         })
@@ -166,53 +111,18 @@ export function fetchBeaches(url) {
                     const formattedBeaches = json.elements.map(_mapBeachToCoordinates)
                     dispatch(fetchBeachesForUserSuccess(formattedBeaches));
 
-                    console.log('state after fetch beaches', getState())
-
                     return formattedBeaches;
                 })
             }
             else {
                 return response.text().then(text => {
                     dispatch(updateBeachQuery(`An error occured: ${text}`))
-                    console.log('error text', text);
                 })
             }
         });
     }
 }
-function _generateBeachUrl(beach) {
-    // determineWeatherApiCall();
-    return `http://api.openweathermap.org/data/2.5/weather?lat=${beach.latitude}&lon=${beach.longitude}&appid=dfadc7ab2e248ddb1afddd6813ddefe9`
-}
 
-function _calculateWeatherScore(weather) {
-    const weatherScores = {
-        'Clouds': 50,
-        'Clear': 100,
-        'Rain': -25,
-        'Drizzle': 0,
-        'Snow': -50,
-        'Thunderstorm': -50
-    }
-    if (!weather.clouds || !weather.clouds.all) {
-        weather.clouds = {
-            all: 50
-        }
-    }
-    if (!weather.rain) {
-        weather.rain = {
-            '3h': 0
-        }
-    }
-
-    return ((100 - weather.clouds.all) - (5 * (Math.abs(297 - weather.main.temp))) - (10 * weather.rain['3h']) + weatherScores[weather.weather[0].main]);
-}
-//
-// _generateOptimalWeather(weatherObject) {
-//     return {
-//
-//     }
-// }
 
 export function fetchWeatherForBeach(beach) {
     return (dispatch, getState) => {
@@ -228,24 +138,14 @@ export function fetchWeatherForBeach(beach) {
                     if (!currentHighScore || (beachScore > currentHighScore.beach.score)) {
                         dispatch(setNewHighScore(beach.id, {...beach, score: beachScore, weather: json}));
                     }
-                    console.log('state after fetch promise', getState());
-
                 })
             }
             else {
                 return response.text().then(text => {
                     dispatch(updateBeachQuery(`An error occured: ${text}`))
-                    console.log('error text', text);
                 })
             }
         })
     }
 
-}
-
-function _determineWeatherApiCall() {
-    const today = moment().format('dddd');
-    return (today === 'Saturday' || today === 'Sunday')
-        ? 'weather'
-        : 'forecast';
 }

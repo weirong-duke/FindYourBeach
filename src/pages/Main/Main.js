@@ -7,27 +7,24 @@ import moment from 'moment';
 class Main extends React.Component{
     componentDidMount() {
         this.props.beginBeachQuery();
-        // this.props.getUserCoordinates()
-        //     .then(response => {
-        //         if (response.success) {
-        //             return this.props.fetchBeaches(this.props.user.url);
-        //         }
-        //     })
-        //     .then(queryResponse => {
-        //         console.log('success! GOT THE SHIT', queryResponse)
-        //         const weatherPromises = [];
-        //
-        //         queryResponse.forEach(beach => {
-        //             weatherPromises.push(this.props.fetchWeatherForBeach(beach))
-        //         })
-        //         Promise.all(weatherPromises)
-        //             .then(() => {
-        //                 this.props.updateBeachQuery('Calculating optimal beach...');
-        //
-        //                 console.log('finished')
-        //                 this.props.finishBeachQuery();
-        //             })
-        //     })
+        this.props.getUserCoordinates()
+            .then(response => {
+                if (response.success) {
+                    return this.props.fetchBeaches(this.props.user.url);
+                }
+            })
+            .then(queryResponse => {
+                const weatherPromises = [];
+
+                queryResponse.forEach(beach => {
+                    weatherPromises.push(this.props.fetchWeatherForBeach(beach))
+                })
+                Promise.all(weatherPromises)
+                    .then(() => {
+                        this.props.updateBeachQuery('Calculating optimal beach...');
+                        this.props.finishBeachQuery();
+                    })
+            })
 
     }
 
@@ -37,7 +34,6 @@ class Main extends React.Component{
                 <Link to="/searching" style={styles.sunButton} >
                     <Image source={require('../../data/sunButton.png')} style={styles.sunButton} />
                 </Link>
-
 
             </Image>
 
