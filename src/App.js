@@ -22,8 +22,8 @@ class App extends React.Component{
             <Provider store={store}>
                 <NativeRouter>
                     <View style={styles.container}>
-                        <Route exact path='/' component={Main} />
-                        <Route exact path='/searching' component={Searching} />
+                        <Route exact path='/asd' component={Main} />
+                        <Route exact path='/' component={Searching} />
                     </View>
                 </NativeRouter>
             </Provider>

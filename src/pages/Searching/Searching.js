@@ -1,6 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import * as Progress from 'react-native-progress';
+import Hr from 'react-native-hr';
+import moment from 'moment';
 
 const getProgress = (status) => {
         const progressLevels = {
@@ -24,28 +26,72 @@ const renderProgress = (status) => {
     )
 }
 
+const _convertToFahrenheit = (temperature) => {
+    return Math.round(temperature * 9 / 5 - 459.67);
+}
+
+const _getWeatherIcon = (weatherCondition) => {
+    console.log(weatherCondition);
+    const nightHours = [0,1,2,3,4,5,19,20,21,22,23];
+    const icons = {
+        day: {
+            'Clouds': '02d.png',
+            'Clear': '01d.png',
+            'Rain': '09d.png',
+            'Drizzle': '09d.png',
+            'Snow': '13d.png',
+            'Thunderstorm': '11d.png'
+        },
+        night: {
+            'Clouds': '02n.png',
+            'Clear': '01n.png',
+            'Rain': '09d.png',
+            'Drizzle': '09d.png',
+            'Snow': '13d.png',
+            'Thunderstorm': '11d.png'
+        }
+    }
+    console.log(moment().hour())
+    console.log(nightHours.includes(moment().hour()))
+    if (nightHours.includes(moment().hour())) {
+        console.log(`http://openweathermap.org/img/w/${icons.night[weatherCondition]}`)
+        return `http://openweathermap.org/img/w/${icons.night[weatherCondition]}`
+    }
+    else {
+        console.log(`http://openweathermap.org/img/w/${icons.day[weatherCondition]}`)
+        return `http://openweathermap.org/img/w/${icons.day[weatherCondition]}`
+    }
+}
+
 const renderResults = (beach) => {
-        return (
-            <View>
-                <Text style={styles.beachTitle}>
-                    {beach.name}
-                </Text>
-                <Text style={styles.beachData}>
-                    Beach Score: {beach.score}
-                </Text>
-                <Text style={styles.beachData}>
-                    {beach.weather.weather[0].main}
-                </Text>
-                <Text style={styles.beachData}>
-                    Temperature: {beach.weather.main.temp}
-                </Text>
-                <Text style={styles.beachData}>
-                    Wind: {beach.weather.wind.speed} mph
-                </Text>
+    const iconUrl = _getWeatherIcon(beach.weather.weather[0].main)
+    return (
+            <Image source={require('../../data/resultsBackground.png')} style={styles.background}>
 
-            </View>
+                                <Text style={styles.beachTitle}>
+                                    {beach.name}
+                                </Text>
+                                <Text style={styles.beachDataLarge}>
+                                    Score: {beach.score}
+                                </Text>
+                                <Text style={styles.beachDataLarge}>
+                                    {_convertToFahrenheit(beach.weather.main.temp)}° F
+                                </Text>
+                                <Text style={styles.beachDataLarge}>
+                                    {beach.weather.weather[0].main}
+                                    <Image style={{height:50, width:50}} source={{uri: iconUrl}} />
 
-        )
+                                </Text>
+
+                                <Hr lineColor='#fff'/>
+                                <Text style={styles.beachDataMedium}>
+                                    Wind: {beach.weather.wind.speed} mph
+                                </Text>
+
+            </Image>
+
+
+    )
     }
 
 export default class Searching extends React.Component{
@@ -54,29 +100,39 @@ export default class Searching extends React.Component{
     }
 
     render() {
-        return (
-            <View>
-                {(this.props.querying.status === 'Done') ? renderResults(this.props.beaches.highScore.beach) : renderProgress(this.props.querying.status)}
-            </View>
+        // {(this.props.querying.status === 'Done') ? renderResults(this.props.beaches.highScore.beach) : renderProgress(this.props.querying.status)}
 
-        )
+        return renderResults(this.props.beaches.highScore.beach || {name: "Your mom's beach", score: 50, weather: {weather:[{main:'Clouds'}], main: {temp: 285}, wind:{speed:23}}})
 
     }
 }
 
 
 const styles = StyleSheet.create({
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10
+    background: {
+            flex: 1,
+            alignSelf: 'stretch',
+            width: null,
     },
     beachTitle: {
+        color: 'white',
         fontSize: 36,
-        margin: 10
+        marginTop: 10,
+        marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 0
     },
-    beachData: {
+    beachDataLarge: {
+        color: 'white',
+        fontSize: 30,
+        marginTop: 0,
+        marginLeft: 10,
+        marginRight: 10
+    },
+    beachDataMedium: {
         fontSize: 24,
-        margin: 10
+        marginLeft: 10,
+        marginRight: 10,
+        color: 'white'
     }
 });
